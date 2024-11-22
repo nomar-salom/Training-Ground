@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     public float sensitivity = 5f;
     //Vertical change in camera
     private float rotationX = 0f; 
+    public bool shoot;
 
     void Start()
     {
@@ -68,5 +69,6 @@ public class PlayerMovement : MonoBehaviour
             //horizontal rotation taking into account input/sensitivity
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
         }
+        shoot = Input.GetMouseButtonDown(0);    
     }
 }
