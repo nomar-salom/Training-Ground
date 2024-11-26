@@ -14,6 +14,8 @@ Joshua Espinosa - Movement
 
 Clayton Cox - Targets
 
+Arturo Cardenal - Score and UI
+
 ## Game Description
 Training Ground is a first person shooting game where you will go through a course as fast as you can while also shooting targets that will move and pop up. How well you do in the game is determined by the time in which you complete the course, but with how many targets missed effecting your score. 
 
