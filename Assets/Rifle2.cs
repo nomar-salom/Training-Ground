@@ -1,49 +1,58 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-//using PlayerController; //uncomment later and replace "PlayerController" with name of playercontroller class
-
-
-/*
-Add this to playert controller:
-
-public bool shoot;
-
-public void OnSprint(InputValue value)
-{
-    shoot = value.isPressed;
-}
-*/
 
 public class Rifle2 : MonoBehaviour
 {
-    bool test; //placeholder for value.isPressed
-    private PlayerMovement playerMovement;
-    private PlayerMovement _input; //uncomment later and replace "PlayerController" with name of playercontroller class
+    private PlayerMovement _input;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private GameObject bulletPoint;
     [SerializeField] private float bulletSpeed = 600;
-    // Start is called before the first frame update
+    [SerializeField] private int magazineSize = 8;
+    [SerializeField] private float reloadTime = 2f;
+    [SerializeField] private float fireRate = 0.0f;
+
+    private int bulletsLeft;
+    private bool isReloading = false;
+    private float nextFireTime = 0f;
+
+    private bool lastShootState = false;
+
     void Start()
     {
-        _input = transform.root.GetComponent<PlayerMovement>(); //uncommnet later and replace "PlayerController" with name of playercontroller class
+        _input = transform.root.GetComponent<PlayerMovement>();
+        bulletsLeft = magazineSize;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (_input.shoot) // replace with "test" with "_input.shoot"
+        if (isReloading) return;
+
+        // Fire only when the input state changes (from not shooting to shooting)
+        if (_input.shoot && !lastShootState && bulletsLeft > 0 && Time.time >= nextFireTime)
         {
             Shoot();
-            _input.shoot = false; // replace with "test" with "_input.shoot"
         }
+
+        lastShootState = _input.shoot; // Track the previous frame's input state
+
+        if (bulletsLeft <= 0) StartCoroutine(Reload());
     }
 
     void Shoot()
     {
-        Debug.Log("shoot");
+        nextFireTime = Time.time + fireRate;
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
         bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
         Destroy(bullet, 1);
+        bulletsLeft--;
+    }
+
+    IEnumerator Reload()
+    {
+        isReloading = true;
+        yield return new WaitForSeconds(reloadTime);
+        bulletsLeft = magazineSize;
+        isReloading = false;
     }
 }
