@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class HitDetection : MonoBehaviour
 {
@@ -8,8 +10,11 @@ public class HitDetection : MonoBehaviour
     public float rotationSpeed = 2f;
     public bool isRotating = false;
     public bool targetHit = false;
+    public PlayerScore scoreText;
     private float targetRotationX;
     private TargetMovement targetMovement; // Reference to TargetMovement
+
+    
 
     void Start()
     {
@@ -36,6 +41,8 @@ public class HitDetection : MonoBehaviour
                 targetHit = true;
                 targetRotationX = transform.rotation.eulerAngles.x + 90f; // Increase rotation by 90 degrees
                 StartCoroutine(RotateTarget());
+                scoreText.AddScore(10);
+                
             }
         }
     }

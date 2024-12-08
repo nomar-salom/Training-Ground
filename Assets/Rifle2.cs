@@ -18,6 +18,8 @@ public class Rifle2 : MonoBehaviour
 
     private bool lastShootState = false;
 
+    public AmmoCounter ammoText;
+
     void Start()
     {
         _input = transform.root.GetComponent<PlayerMovement>();
@@ -37,6 +39,7 @@ public class Rifle2 : MonoBehaviour
         lastShootState = _input.shoot; // Track the previous frame's input state
 
         if (bulletsLeft <= 0) StartCoroutine(Reload());
+                       
     }
 
     void Shoot()
@@ -46,6 +49,7 @@ public class Rifle2 : MonoBehaviour
         bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
         Destroy(bullet, 1);
         bulletsLeft--;
+        ammoText.UseRifleAmmo();
     }
 
     IEnumerator Reload()
@@ -54,5 +58,6 @@ public class Rifle2 : MonoBehaviour
         yield return new WaitForSeconds(reloadTime);
         bulletsLeft = magazineSize;
         isReloading = false;
+        ammoText.reloadRifleAmmoText();
     }
 }
