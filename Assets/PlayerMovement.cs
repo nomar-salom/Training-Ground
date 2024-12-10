@@ -69,6 +69,10 @@ public class PlayerMovement : MonoBehaviour
             //horizontal rotation taking into account input/sensitivity
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
         }
-        shoot = Input.GetMouseButtonDown(0);    
+
+        if(!PauseMenu.isPaused) {
+            shoot = Input.GetMouseButtonDown(0);
+        }
+            
     }
 }
