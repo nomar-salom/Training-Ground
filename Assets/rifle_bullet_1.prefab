@@ -12,10 +12,11 @@ GameObject:
   - component: {fileID: 6820379510858747283}
   - component: {fileID: 6789387642105056723}
   - component: {fileID: 5949192936431002275}
-  - component: {fileID: 6580355400585600564}
+  - component: {fileID: -3838125130055022505}
+  - component: {fileID: -2511648292081813114}
   m_Layer: 0
   m_Name: rifle_bullet_1
-  m_TagString: Projectile
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,9 +112,22 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 48
-  m_CollisionDetection: 0
---- !u!135 &6580355400585600564
-SphereCollider:
+  m_CollisionDetection: 1
+--- !u!114 &-3838125130055022505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3778118762408743193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa8e2861b3061d24692b0cb4a4fb30d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1
+--- !u!65 &-2511648292081813114
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -127,9 +141,9 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.1832546
+  m_Size: {x: 0.064430125, y: 0.06305833, z: 0.3665092}
   m_Center: {x: -0.0022112625, y: 0.0022651237, z: 0.042607747}
