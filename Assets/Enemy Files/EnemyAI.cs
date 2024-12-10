@@ -26,9 +26,20 @@ public class EnemyAI : MonoBehaviour
     private bool isMoving = false; // Tracks whether the enemy is currently moving
     private bool isDead = false; // Tracks whether the enemy is dead
 
+    public AudioClip shootingSound; // The sound played when shooting
+    public AudioClip deathSound; // The sound played when dying
+    public AudioSource audioSource; // The audio source for playing sounds
+
+    public AudioSource boom;
+
     private void Awake()
     {
         animator = GetComponent<Animator>(); // Get the Animator component
+        audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
+        if (audioSource.isPlaying)
+        {
+        audioSource.Stop();
+        }
     }
 
     private void Start()
@@ -131,12 +142,19 @@ private bool IsPlayerInSight()
 
         if (!alreadyAttacked)
         {
+
+
             // Play shooting animation
             animator.SetBool("isShooting", true);
 
             GameObject bullet = Instantiate(bulletPrefab, firePoint.transform.position, firePoint.transform.rotation);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(rb.transform.forward * bulletSpeed);
+
+            if (audioSource != null && shootingSound != null)
+            {
+                audioSource.PlayOneShot(shootingSound);
+            }
 
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
@@ -162,7 +180,18 @@ private bool IsPlayerInSight()
         // Play death animation
         animator.SetBool("isDead", true);
         isDead = true; // Set the enemy as dead
+
+
+        if (audioSource != null && deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound);
+        }
+
         Invoke(nameof(DestroyEnemy), 4f); // Delay to let animation play
+
+
+        tag = "Dead";
+        
     }
 
     private void DestroyEnemy()

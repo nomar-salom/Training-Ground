@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class HitDetection : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class HitDetection : MonoBehaviour
     private TargetMovement targetMovement; // Reference to TargetMovement
     public bool onWall = false;//Used for the wall targets
 
+    public PlayerScore scoreText;
+
     public GameObject triggerWall;
     public bool flipDirection = false;
 
@@ -20,6 +24,8 @@ public class HitDetection : MonoBehaviour
     Quaternion initialRotation;
 
     bool gonnaMove;
+
+    
     
 
     void Start()
@@ -87,6 +93,7 @@ public class HitDetection : MonoBehaviour
                 targetHit = true;
                 targetRotationX = transform.rotation.eulerAngles.x + 90f; // Increase rotation by 90 degrees
                 StartCoroutine(RotateTarget());
+                scoreText.AddScore(10);
             }            
             
             if (!isRotating && !targetHit && onWall)
@@ -94,6 +101,7 @@ public class HitDetection : MonoBehaviour
                 targetHit = true;
                 targetRotationX = transform.rotation.eulerAngles.y - 90f; // Increase rotation by 90 degrees
                 StartCoroutine(RotateTarget());
+                scoreText.AddScore(10);
             }
         }
     }

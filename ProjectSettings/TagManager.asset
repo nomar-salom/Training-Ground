@@ -9,6 +9,8 @@ TagManager:
   - Axe
   - Bullet
   - ActiveWall
+  - Dead
+  - Ouch
   layers:
   - Default
   - TransparentFX

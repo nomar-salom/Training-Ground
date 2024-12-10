@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
 
         //handles camera movements based on inputs and sensitivity
-        if(playerCamera != null) {
+        /*if(playerCamera != null) {
             float mouseVerticalInput = Input.GetAxis("Mouse Y") * sensitivity;
             rotationX = rotationX - mouseVerticalInput;
             //clamping helps in avoiding the camera flipping like crazy
@@ -68,7 +68,20 @@ public class PlayerMovement : MonoBehaviour
 
             //horizontal rotation taking into account input/sensitivity
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
+        }*/
+        if(!PauseMenu.isPaused) {
+            shoot = Input.GetMouseButtonDown(0);
+
+            if(playerCamera != null) {
+                float mouseVerticalInput = Input.GetAxis("Mouse Y") * sensitivity;
+                rotationX = rotationX - mouseVerticalInput;
+                //clamping helps in avoiding the camera flipping like crazy
+                rotationX = Mathf.Clamp(rotationX, -horizontalLimit, horizontalLimit); 
+                playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
+
+                //horizontal rotation taking into account input/sensitivity
+                transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
+            }
         }
-        shoot = Input.GetMouseButtonDown(0);    
     }
 }
