@@ -12,17 +12,65 @@ public class HitDetection : MonoBehaviour
     private TargetMovement targetMovement; // Reference to TargetMovement
     public bool onWall = false;//Used for the wall targets
 
+    public GameObject triggerWall;
     public bool flipDirection = false;
+
+    bool hasPopped = false;
+
+    Quaternion initialRotation;
+
+    bool gonnaMove;
+    
 
     void Start()
     {
         // Get the TargetMovement script attached to the same GameObject
         targetMovement = GetComponent<TargetMovement>();
+        initialRotation = transform.rotation;
+
+        if (targetMovement != null)//stores if the target is supposed to move
+        {
+            gonnaMove = targetMovement.isMoving;
+            targetMovement.isMoving = false;
+        }
+
+        if(onWall && !flipDirection)
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y - 90f, transform.rotation.eulerAngles.z);
+        }
+        else if(onWall && flipDirection)
+        {
+
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + 90f, transform.rotation.eulerAngles.z);
+
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x + 90f, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+
+        }
+}
+
+
+    void FixedUpdate()
+    {
+        if(triggerWall.CompareTag("ActiveWall") && !hasPopped)
+        {
+            Debug.Log("activate!!!!");
+            hasPopped = true;
+
+            if (targetMovement != null)//stores if the target is supposed to move
+            {
+                targetMovement.isMoving = gonnaMove;
+            }
+
+            popTarget();
+        }
     }
     void OnCollisionEnter(Collision collision)
     {
         // Check if the collision object has a "Projectile" tag
-        if (collision.gameObject.CompareTag("Projectile"))
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             health -= 1; // Reduce health
             Debug.Log("Target hit!");
@@ -65,14 +113,9 @@ public class HitDetection : MonoBehaviour
         }
         else
         {
-            if(flipDirection)
-            {
-                finalRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, targetRotationX, transform.rotation.eulerAngles.z);
-            }
-            else
-            {
-                finalRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, -1 * targetRotationX, transform.rotation.eulerAngles.z);
-            }
+
+            finalRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, -1 * targetRotationX, transform.rotation.eulerAngles.z);
+
         }
 
         float elapsedTime = 0f;
@@ -89,5 +132,22 @@ public class HitDetection : MonoBehaviour
         transform.rotation = finalRotation;
 
         isRotating = false;
+    }
+
+    void popTarget()
+    {
+        if (!isRotating && !targetHit && !onWall)
+        {
+            // targetHit = true;
+            targetRotationX = transform.rotation.eulerAngles.x + 90f; // Increase rotation by 90 degrees
+            StartCoroutine(RotateTarget());
+        }            
+        
+        if (!isRotating && !targetHit && onWall)
+        {
+            // targetHit = true;
+            targetRotationX = transform.rotation.eulerAngles.y - 90f; // Increase rotation by 90 degrees
+            StartCoroutine(RotateTarget());
+        }
     }
 }
