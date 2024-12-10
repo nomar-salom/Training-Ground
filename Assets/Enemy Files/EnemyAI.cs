@@ -26,9 +26,18 @@ public class EnemyAI : MonoBehaviour
     private bool isMoving = false; // Tracks whether the enemy is currently moving
     private bool isDead = false; // Tracks whether the enemy is dead
 
+    public AudioClip shootingSound; // The sound played when shooting
+    public AudioClip deathSound; // The sound played when dying
+    private AudioSource audioSource; // The audio source for playing sounds
+
     private void Awake()
     {
         animator = GetComponent<Animator>(); // Get the Animator component
+        audioSource = GetComponent<AudioSource>(); // Get the AudioSource component
+        if (audioSource.isPlaying)
+        {
+        audioSource.Stop();
+        }
     }
 
     private void Start()
@@ -40,65 +49,64 @@ public class EnemyAI : MonoBehaviour
     }
 
     private void Update()
-{
-    // Check ranges
-    playerInSightRange = IsPlayerInSight();
-    playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-    playerInWalkRange = Physics.CheckSphere(transform.position, walkRange, whatIsPlayer);
+    {
+        // Check ranges
+        playerInSightRange = IsPlayerInSight();
+        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        playerInWalkRange = Physics.CheckSphere(transform.position, walkRange, whatIsPlayer);
 
-    if (isDead)
-        return; // Do not process movement or attack if the enemy is dead
+        if (isDead)
+            return; // Do not process movement or attack if the enemy is dead
 
-    // Handle movement only if the player is in walk range but not in attack range
-    if (playerInWalkRange && !playerInAttackRange && canMove)
-    {
-        isMoving = true;
-    }
-    else
-    {
-        isMoving = false;
-    }
-
-    if (isMoving)
-    {
-        animator.SetBool("isWalking", true); // Play walking animation
-        MoveTowardsPlayer();
-    }
-    else
-    {
-        animator.SetBool("isWalking", false); // Stop walking animation
-    }
-
-    // Handle attacking only if not moving and the player is in attack range and visible
-    if (!isMoving && playerInAttackRange && playerInSightRange)
-    {
-        AttackPlayer();
-    }
-    else
-    {
-        animator.SetBool("isShooting", false); // Reset to idle if not attacking
-    }
-}
-
-private bool IsPlayerInSight()
-{
-    Vector3 directionToPlayer = player.position - transform.position;
-    RaycastHit hit;
-
-    // Perform a raycast from the enemy to the player
-    if (Physics.Raycast(transform.position, directionToPlayer.normalized, out hit, sightRange, whatIsPlayer))
-    {
-        // If the raycast hits the player, return true
-        if (hit.collider.CompareTag("Player"))
+        // Handle movement only if the player is in walk range but not in attack range
+        if (playerInWalkRange && !playerInAttackRange && canMove)
         {
-            return true;
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
+        }
+
+        if (isMoving)
+        {
+            animator.SetBool("isWalking", true); // Play walking animation
+            MoveTowardsPlayer();
+        }
+        else
+        {
+            animator.SetBool("isWalking", false); // Stop walking animation
+        }
+
+        // Handle attacking only if not moving and the player is in attack range and visible
+        if (!isMoving && playerInAttackRange && playerInSightRange)
+        {
+            AttackPlayer();
+        }
+        else
+        {
+            animator.SetBool("isShooting", false); // Reset to idle if not attacking
         }
     }
 
-    // Return false if no player is detected in line of sight
-    return false;
-}
+    private bool IsPlayerInSight()
+    {
+        Vector3 directionToPlayer = player.position - transform.position;
+        RaycastHit hit;
 
+        // Perform a raycast from the enemy to the player
+        if (Physics.Raycast(transform.position, directionToPlayer.normalized, out hit, sightRange, whatIsPlayer))
+        {
+            // If the raycast hits the player, return true
+            if (hit.collider.CompareTag("Player"))
+            {
+                return true;
+            }
+        }
+
+        // Return false if no player is detected in line of sight
+        return false;
+    }
 
     private void MoveTowardsPlayer()
     {
@@ -132,6 +140,12 @@ private bool IsPlayerInSight()
             // Play shooting animation
             animator.SetBool("isShooting", true);
 
+            // Play the shooting sound
+            if (audioSource != null && shootingSound != null)
+            {
+                audioSource.PlayOneShot(shootingSound);
+            }
+
             GameObject bullet = Instantiate(bulletPrefab, firePoint.transform.position, firePoint.transform.rotation);
             Rigidbody rb = bullet.GetComponent<Rigidbody>();
             rb.AddForce(rb.transform.forward * bulletSpeed);
@@ -157,10 +171,20 @@ private bool IsPlayerInSight()
 
     private void Die()
     {
-        // Play death animation
-        animator.SetBool("isDead", true);
-        isDead = true; // Set the enemy as dead
-        Invoke(nameof(DestroyEnemy), 4f); // Delay to let animation play
+        if (!isDead)
+        {
+            // Play death animation
+            animator.SetBool("isDead", true);
+            isDead = true; // Set the enemy as dead
+
+            // Play the death sound
+            if (audioSource != null && deathSound != null)
+            {
+                audioSource.PlayOneShot(deathSound);
+            }
+
+            Invoke(nameof(DestroyEnemy), 4f); // Delay to let animation play
+        }
     }
 
     private void DestroyEnemy()
