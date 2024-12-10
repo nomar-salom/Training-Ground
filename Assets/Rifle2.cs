@@ -19,6 +19,7 @@ public class Rifle2 : MonoBehaviour
     private bool lastShootState = false;
 
     public AmmoCounter ammoText;
+    public AudioSource reloadSound;
 
     void Start()
     {
@@ -38,8 +39,7 @@ public class Rifle2 : MonoBehaviour
 
         lastShootState = _input.shoot; // Track the previous frame's input state
 
-        if (bulletsLeft <= 0) StartCoroutine(Reload());
-                       
+        if (bulletsLeft <= 0) StartCoroutine(Reload()); 
     }
 
     void Shoot()
@@ -54,10 +54,20 @@ public class Rifle2 : MonoBehaviour
 
     IEnumerator Reload()
     {
+
         isReloading = true;
+        ammoText.ShowReloading();
+        if (reloadSound != null)
+        {
+            reloadSound.time = reloadSound.clip.length - 2f; //the first two seconds of the soundfile is silent
+            reloadSound.Play();
+        }
+
         yield return new WaitForSeconds(reloadTime);
         bulletsLeft = magazineSize;
         isReloading = false;
+
+        ammoText.HideReloading();
         ammoText.reloadRifleAmmoText();
     }
 }
