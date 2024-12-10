@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAiTutorial : MonoBehaviour
+public class EnemyAI : MonoBehaviour
 {
     public Transform player;
     public Transform firePoint;
@@ -40,45 +40,65 @@ public class EnemyAiTutorial : MonoBehaviour
     }
 
     private void Update()
+{
+    // Check ranges
+    playerInSightRange = IsPlayerInSight();
+    playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+    playerInWalkRange = Physics.CheckSphere(transform.position, walkRange, whatIsPlayer);
+
+    if (isDead)
+        return; // Do not process movement or attack if the enemy is dead
+
+    // Handle movement only if the player is in walk range but not in attack range
+    if (playerInWalkRange && !playerInAttackRange && canMove)
     {
-        // Check ranges
-        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-        playerInWalkRange = Physics.CheckSphere(transform.position, walkRange, whatIsPlayer);
+        isMoving = true;
+    }
+    else
+    {
+        isMoving = false;
+    }
 
-        if (isDead)
-            return; // Do not process movement or attack if the enemy is dead
+    if (isMoving)
+    {
+        animator.SetBool("isWalking", true); // Play walking animation
+        MoveTowardsPlayer();
+    }
+    else
+    {
+        animator.SetBool("isWalking", false); // Stop walking animation
+    }
 
-        // Handle movement only if the player is in walk range but not in attack range
-        if (playerInWalkRange && !playerInAttackRange && canMove)
-        {
-            isMoving = true;
-        }
-        else
-        {
-            isMoving = false;
-        }
+    // Handle attacking only if not moving and the player is in attack range and visible
+    if (!isMoving && playerInAttackRange && playerInSightRange)
+    {
+        AttackPlayer();
+    }
+    else
+    {
+        animator.SetBool("isShooting", false); // Reset to idle if not attacking
+    }
+}
 
-        if (isMoving)
-        {
-            animator.SetBool("isWalking", true); // Play walking animation
-            MoveTowardsPlayer();
-        }
-        else
-        {
-            animator.SetBool("isWalking", false); // Stop walking animation
-        }
+private bool IsPlayerInSight()
+{
+    Vector3 directionToPlayer = player.position - transform.position;
+    RaycastHit hit;
 
-        // Handle attacking only if not moving and the player is in attack range
-        if (!isMoving && playerInAttackRange && playerInSightRange)
+    // Perform a raycast from the enemy to the player
+    if (Physics.Raycast(transform.position, directionToPlayer.normalized, out hit, sightRange, whatIsPlayer))
+    {
+        // If the raycast hits the player, return true
+        if (hit.collider.CompareTag("Player"))
         {
-            AttackPlayer();
-        }
-        else
-        {
-            animator.SetBool("isShooting", false); // Reset to idle if not attacking
+            return true;
         }
     }
+
+    // Return false if no player is detected in line of sight
+    return false;
+}
+
 
     private void MoveTowardsPlayer()
     {
