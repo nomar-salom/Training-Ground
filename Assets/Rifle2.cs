@@ -13,7 +13,8 @@ public class Rifle2 : MonoBehaviour
     [SerializeField] private float fireRate = 0.0f;
 
     private int bulletsLeft;
-    private bool isReloading = false;
+    // private bool isReloading = false;
+    public bool isReloading { get; private set; }
     private float nextFireTime = 0f;
 
     private bool lastShootState = false;
@@ -22,10 +23,14 @@ public class Rifle2 : MonoBehaviour
     {
         _input = transform.root.GetComponent<PlayerMovement>();
         bulletsLeft = magazineSize;
+        isReloading = false;
     }
 
     void Update()
     {
+        // If the rifle is not active, do nothing
+        if (!gameObject.activeSelf) return;
+
         if (isReloading) return;
 
         // Fire only when the input state changes (from not shooting to shooting)
@@ -42,6 +47,7 @@ public class Rifle2 : MonoBehaviour
     void Shoot()
     {
         nextFireTime = Time.time + fireRate;
+        Debug.Log("shoot rifle");
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
         bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
         Destroy(bullet, 1);
@@ -51,8 +57,10 @@ public class Rifle2 : MonoBehaviour
     IEnumerator Reload()
     {
         isReloading = true;
+        Debug.Log("Reloading Rifle...");
         yield return new WaitForSeconds(reloadTime);
         bulletsLeft = magazineSize;
         isReloading = false;
+        Debug.Log("Rifle Reload complete!");
     }
 }

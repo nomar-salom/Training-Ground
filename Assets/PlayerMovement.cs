@@ -18,10 +18,22 @@ public class PlayerMovement : MonoBehaviour
     //Vertical change in camera
     private float rotationX = 0f; 
     public bool shoot;
+    public GameObject rifle;
+    public GameObject smg;
+    private bool isRifleActive = true;
+    public Rifle2 rifleScript;
+    public MachineGun smgScript;
+
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        rifleScript = rifle.GetComponentInChildren<Rifle2>();
+        smgScript = smg.GetComponentInChildren<MachineGun>();
+
+        rifle.SetActive(true);
+        smg.SetActive(false);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -69,6 +81,65 @@ public class PlayerMovement : MonoBehaviour
             //horizontal rotation taking into account input/sensitivity
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
         }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            SwitchWeapon();
+        }
+        
         shoot = Input.GetMouseButtonDown(0);    
     }
+
+    // void SwitchWeapon()
+    // {
+    //     Debug.Log("Switching weapon");
+    //     isRifleActive = !isRifleActive;
+    //     rifle.SetActive(isRifleActive);
+    //     smg.SetActive(!isRifleActive);
+    // }
+
+    void SwitchWeapon()
+    {
+        if (rifleScript.isReloading || smgScript.isReloading)
+        {
+            Debug.Log("Cannot switch weapons while reloading.");
+            return;
+        }
+
+        Debug.Log("Switching weapon");
+        if (isRifleActive)
+        {
+            StartCoroutine(SwitchWeaponSmooth(rifle, smg));
+        }
+        else
+        {
+            StartCoroutine(SwitchWeaponSmooth(smg, rifle));
+        }
+        isRifleActive = !isRifleActive;
+    }
+
+
+    IEnumerator SwitchWeaponSmooth(GameObject oldWeapon, GameObject newWeapon)
+    {
+        float duration = 0.3f; // Duration of the animation
+        Vector3 initialOldPos = oldWeapon.transform.localPosition;
+        Vector3 targetOldPos = initialOldPos + new Vector3(0, -0.5f, -0.5f); // Move backwards
+        Vector3 initialNewPos = newWeapon.transform.localPosition;
+        Vector3 targetNewPos = initialNewPos + new Vector3(0, 0.5f, 0.5f); // Move forwards
+
+        // Deactivate shooting while switching weapons
+        shoot = false;
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            oldWeapon.transform.localPosition = Vector3.Lerp(initialOldPos, targetOldPos, t / duration);
+            newWeapon.transform.localPosition = Vector3.Lerp(initialNewPos, targetNewPos, t / duration);
+            yield return null;
+        }
+
+        // Activate/deactivate weapons
+        oldWeapon.SetActive(false);
+        newWeapon.SetActive(true);
+    }
+
 }

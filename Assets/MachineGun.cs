@@ -13,17 +13,22 @@ public class MachineGun : MonoBehaviour
     [SerializeField] private float fireRate = 0.1f; // Time (in seconds) between consecutive shots
 
     private int bulletsLeft;
-    private bool isReloading = false;
+    // private bool isReloading = false;
+    public bool isReloading { get; private set; }
     private float nextFireTime = 0f;
 
     void Start()
     {
         _input = transform.root.GetComponent<PlayerMovement>(); // Replace with your player controller class
         bulletsLeft = magazineSize;
+        isReloading = false;
     }
 
     void Update()
     {
+        // If the rifle is not active, do nothing
+        if (!gameObject.activeSelf) return;
+
         if (isReloading)
             return;
 
@@ -51,7 +56,7 @@ public class MachineGun : MonoBehaviour
     void Shoot()
     {
         nextFireTime = Time.time + fireRate; // Set the next allowed fire time
-        Debug.Log("shoot");
+        Debug.Log("shoot smg");
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
         bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
         Destroy(bullet, 1);
@@ -61,10 +66,10 @@ public class MachineGun : MonoBehaviour
     IEnumerator Reload()
     {
         isReloading = true;
-        Debug.Log("Reloading...");
+        Debug.Log("Reloading SMG...");
         yield return new WaitForSeconds(reloadTime);
         bulletsLeft = magazineSize;
         isReloading = false;
-        Debug.Log("Reload complete!");
+        Debug.Log("SMG Reload complete!");
     }
 }
