@@ -10,6 +10,9 @@ public class HitDetection : MonoBehaviour
     public bool targetHit = false;
     private float targetRotationX;
     private TargetMovement targetMovement; // Reference to TargetMovement
+    public bool onWall = false;//Used for the wall targets
+
+    public bool flipDirection = false;
 
     void Start()
     {
@@ -31,10 +34,17 @@ public class HitDetection : MonoBehaviour
                 targetMovement.isMoving = false;
             }
             // When the target is hit, knock it down 90 degrees
-            if (!isRotating && !targetHit)
+            if (!isRotating && !targetHit && !onWall)
             {
                 targetHit = true;
                 targetRotationX = transform.rotation.eulerAngles.x + 90f; // Increase rotation by 90 degrees
+                StartCoroutine(RotateTarget());
+            }            
+            
+            if (!isRotating && !targetHit && onWall)
+            {
+                targetHit = true;
+                targetRotationX = transform.rotation.eulerAngles.y - 90f; // Increase rotation by 90 degrees
                 StartCoroutine(RotateTarget());
             }
         }
@@ -45,9 +55,25 @@ public class HitDetection : MonoBehaviour
     {
         isRotating = true;
 
+        Quaternion finalRotation;
+
         // Cache the initial rotation
         Quaternion initialRotation = transform.rotation;
-        Quaternion finalRotation = Quaternion.Euler(targetRotationX, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+        if(!onWall)
+        {
+            finalRotation = Quaternion.Euler(targetRotationX, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+        }
+        else
+        {
+            if(flipDirection)
+            {
+                finalRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, targetRotationX, transform.rotation.eulerAngles.z);
+            }
+            else
+            {
+                finalRotation = Quaternion.Euler(transform.rotation.eulerAngles.x, -1 * targetRotationX, transform.rotation.eulerAngles.z);
+            }
+        }
 
         float elapsedTime = 0f;
 
