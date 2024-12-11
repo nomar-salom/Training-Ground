@@ -16,6 +16,14 @@ public class MachineGun : MonoBehaviour
     private bool isReloading = false;
     private float nextFireTime = 0f;
 
+    
+    public AudioClip shootingSound; // Shooting sound
+    // [SerializeField] private AudioClip reloadingSound; // Reloading sound
+    public AudioSource audioSource;
+
+    public AmmoCounter ammoText;
+    public AudioSource reloadSound;
+
     void Start()
     {
         _input = transform.root.GetComponent<PlayerMovement>(); // Replace with your player controller class
@@ -56,15 +64,32 @@ public class MachineGun : MonoBehaviour
         bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
         Destroy(bullet, 1);
         bulletsLeft--;
+
+        ammoText.UseSubMachinegunAmmo();
+
+        if (audioSource != null && shootingSound != null)
+        {
+            audioSource.PlayOneShot(shootingSound);
+        }
     }
 
     IEnumerator Reload()
     {
         isReloading = true;
         Debug.Log("Reloading...");
+
+        ammoText.reloadSubMachinegunAmmoText();
+
+
+        if (audioSource != null && reloadSound != null)
+        {
+            reloadSound.Play();
+        }
         yield return new WaitForSeconds(reloadTime);
         bulletsLeft = magazineSize;
         isReloading = false;
         Debug.Log("Reload complete!");
+
+
     }
 }

@@ -83,6 +83,9 @@ public class Rifle2 : MonoBehaviour
 
         bulletsLeft--;
 
+        ammoText.UseRifleAmmo();
+
+
         // Play the shooting sound
         if (audioSource != null && shootingSound != null)
         {
@@ -97,9 +100,11 @@ public class Rifle2 : MonoBehaviour
         // Play the reloading sound
         if (audioSource != null && reloadingSound != null)
         {
-            audioSource.PlayOneShot(reloadingSound);
             ammoText.reloadRifleAmmoText();
+            audioSource.PlayOneShot(reloadingSound);
         }
+
+        
 
         yield return new WaitForSeconds(reloadTime);
 

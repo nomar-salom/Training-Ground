@@ -29,6 +29,13 @@ public class AmmoCounter : MonoBehaviour
         UpdateAmmoUIRifle();
     }
 
+        public void reloadSubMachinegunAmmoText()
+    {
+        currentAmmoSubMachinegun = maxAmmoSubMachinegun;
+        UseSubMachinegunAmmo();
+    }
+
+
     public void UseRifleAmmo()
     {
         if (currentAmmoRifle > 0)
@@ -38,8 +45,8 @@ public class AmmoCounter : MonoBehaviour
         }
     }
 
-    void UpdateAmmoUIRifle()
-    {
+    public void UpdateAmmoUIRifle()
+    { 
         ammoText.text = "Ammo: " + currentAmmoRifle + " / " + maxAmmoRifle;
     }
 
@@ -63,7 +70,7 @@ public class AmmoCounter : MonoBehaviour
         }
     }
 
-    void UpdateAmmoUISubMachinegun()
+    public void UpdateAmmoUISubMachinegun()
     {
        ammoText.text = $"Ammo: " + currentAmmoSubMachinegun + " / " + maxAmmoSubMachinegun;
     }

@@ -27,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     public Rifle2 rifleScript;
     public MachineGun smgScript;
 
+    public AmmoCounter ammoText;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -118,10 +120,12 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("Switching weapon");
         if (isRifleActive)
         {
+            ammoText.UpdateAmmoUISubMachinegun();
             StartCoroutine(SwitchWeaponSmooth(rifle, smg));
         }
         else
         {
+            ammoText.UpdateAmmoUIRifle();
             StartCoroutine(SwitchWeaponSmooth(smg, rifle));
         }
         isRifleActive = !isRifleActive;
