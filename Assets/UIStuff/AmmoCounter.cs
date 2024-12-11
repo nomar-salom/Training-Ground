@@ -13,8 +13,6 @@ public class AmmoCounter : MonoBehaviour
     public TMP_Text ammoText;
     public TMP_Text reloadingText;
     
-    public GameObject rifle;
-    public GameObject smg;
 
     void Start()
     {
@@ -25,17 +23,18 @@ public class AmmoCounter : MonoBehaviour
 
     }
 
-    public void reloadSMGAmmoText()
-    {
-        currentAmmoSubMachinegun = maxAmmoSubMachinegun;
-        UpdateAmmoUISubMachinegun();
-    }
-
-        public void reloadRifleAmmoText()
+    public void reloadRifleAmmoText()
     {
         currentAmmoRifle = maxAmmoRifle;
         UpdateAmmoUIRifle();
     }
+
+        public void reloadSubMachinegunAmmoText()
+    {
+        currentAmmoSubMachinegun = maxAmmoSubMachinegun;
+        UseSubMachinegunAmmo();
+    }
+
 
     public void UseRifleAmmo()
     {
@@ -47,11 +46,9 @@ public class AmmoCounter : MonoBehaviour
     }
 
     public void UpdateAmmoUIRifle()
-    {
+    { 
         ammoText.text = "Ammo: " + currentAmmoRifle + " / " + maxAmmoRifle;
     }
-
-    
 
     public void ShowReloading()
     {
@@ -64,9 +61,9 @@ public class AmmoCounter : MonoBehaviour
     }
 
     //FIXME: When Gunswap is finished, check to make sure this works. It'll need a flag of some sort to recognize which gun is currently active
-     public void UseSubMachinegunAmmo()
-     {
-         if (currentAmmoSubMachinegun > 0)
+    public void UseSubMachinegunAmmo()
+    {
+        if (currentAmmoSubMachinegun > 0)
        {
            currentAmmoSubMachinegun--;
             UpdateAmmoUISubMachinegun();

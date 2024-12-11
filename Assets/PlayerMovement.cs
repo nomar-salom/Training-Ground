@@ -19,32 +19,26 @@ public class PlayerMovement : MonoBehaviour
     private float rotationX = 0f; 
     public bool shoot;
 
+    public PlayerHealth health;
+
     public GameObject rifle;
     public GameObject smg;
     private bool isRifleActive = true;
     public Rifle2 rifleScript;
-    public MachineGun2 smgScript;
+    public MachineGun smgScript;
 
-    public AmmoCounter ammoCounter;
-
-    public  PlayerHealth playerHealth;
-
-    float timeSinceDamage = 0;
-
-    public AudioClip ouchSound; // Shooting sound
-    // [SerializeField] private AudioClip reloadingSound; // Reloading sound
-    public AudioSource audioSource;
+    public AmmoCounter ammoText;
 
     void Start()
     {
-        rifleScript = rifle.GetComponentInChildren<Rifle2>();
-        smgScript = smg.GetComponentInChildren<MachineGun2>();
-        rifle.SetActive(true);
-        smg.SetActive(false);
-
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        rifleScript = rifle.GetComponentInChildren<Rifle2>();
+        smgScript = smg.GetComponentInChildren<MachineGun>();
+        rifle.SetActive(true);
+        smg.SetActive(false);
     }
 
     void Update()
@@ -80,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(velocity * Time.deltaTime);
 
         //handles camera movements based on inputs and sensitivity
-        if(playerCamera != null) {
+        /*if(playerCamera != null) {
             float mouseVerticalInput = Input.GetAxis("Mouse Y") * sensitivity;
             rotationX = rotationX - mouseVerticalInput;
             //clamping helps in avoiding the camera flipping like crazy
@@ -89,39 +83,31 @@ public class PlayerMovement : MonoBehaviour
 
             //horizontal rotation taking into account input/sensitivity
             transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
+        }*/
+        if(!PauseMenu.isPaused) {
+            shoot = Input.GetMouseButtonDown(0);
+
+            if(playerCamera != null) {
+                float mouseVerticalInput = Input.GetAxis("Mouse Y") * sensitivity;
+                rotationX = rotationX - mouseVerticalInput;
+                //clamping helps in avoiding the camera flipping like crazy
+                rotationX = Mathf.Clamp(rotationX, -horizontalLimit, horizontalLimit); 
+                playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
+
+                //horizontal rotation taking into account input/sensitivity
+                transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
+            }
         }
-<<<<<<< Updated upstream
-        shoot = Input.GetMouseButtonDown(0);    
-=======
 
-        
-
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
+         if (Input.GetKeyDown(KeyCode.E))
+         {
             SwitchWeapon();
-        }
-        
-        shoot = Input.GetMouseButton(0);    
->>>>>>> Stashed changes
+            
+         }
+         shoot = Input.GetMouseButton(0);    
+    
+    
     }
-
-    private void OnTriggerEnter(Collider other) {
-        if(other.CompareTag("Ouch") && Time.time - timeSinceDamage > 2) {
-            Debug.Log("TAKING DAMAGE! He got hit by something tagged 'ouch' ");
-            playerHealth.TakeDamage(1);
-            audioSource.PlayOneShot(ouchSound);
-            timeSinceDamage = Time.time;
-        }
-    }
-
-    // void SwitchWeapon()
-    // {
-    //     Debug.Log("Switching weapon");
-    //     isRifleActive = !isRifleActive;
-    //     rifle.SetActive(isRifleActive);
-    //     smg.SetActive(!isRifleActive);
-    // }
 
     void SwitchWeapon()
     {
@@ -134,13 +120,13 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log("Switching weapon");
         if (isRifleActive)
         {
+            ammoText.UpdateAmmoUISubMachinegun();
             StartCoroutine(SwitchWeaponSmooth(rifle, smg));
-            ammoCounter.UpdateAmmoUISubMachinegun();
         }
         else
         {
+            ammoText.UpdateAmmoUIRifle();
             StartCoroutine(SwitchWeaponSmooth(smg, rifle));
-            ammoCounter.UpdateAmmoUIRifle();
         }
         isRifleActive = !isRifleActive;
     }
@@ -168,5 +154,16 @@ public class PlayerMovement : MonoBehaviour
         oldWeapon.SetActive(false);
         newWeapon.SetActive(true);
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Check if the collision object has a "Projectile" tag
+        if (collision.gameObject.CompareTag("Ouch"))
+        {
+            Debug.Log("ouch");
+            health.TakeDamage(1);
+        }
+    }
+
     
 }

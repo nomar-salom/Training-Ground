@@ -11,15 +11,10 @@ public class PlayerScore : MonoBehaviour
     public TMP_Text scoreText;
     public TMP_Text highScoreText;
 
-    int mediumScore = 0;
-
-
     void Start()
     {
         UpdateScoreUI();
         UpdateHighScoreUI();
-        mediumScore = PlayerPrefs.GetInt("HighScore", 0);
-        CheckHighScore();
     }
     public void AddScore(int points)
     {
@@ -35,33 +30,15 @@ public class PlayerScore : MonoBehaviour
 
     public void UpdateHighScoreUI()
     {
-        int hihghestScore = 0;
-        if(highScore > mediumScore)
-        {
-            hihghestScore = highScore;
-        }
-        else
-        {
-            hihghestScore = mediumScore;
-        }
-        highScoreText.text = "High Score: " + hihghestScore;
+        // highScoreText.text = "High Score: " + highScore;
     }
 
     public void CheckHighScore()
     {
-        // PlayerPrefs.SetInt("HighScore", mediumScore);
-
-        if (score >= highScore)
+        if (score > highScore)
         {
-            if(mediumScore <= score)
-            {   highScore = score;
-                PlayerPrefs.SetInt("HighScore", highScore);
-                PlayerPrefs.Save();
-                UpdateHighScoreUI();
-            }
-
+            highScore = score;
+            UpdateHighScoreUI();
         }
-
-
     }
 }

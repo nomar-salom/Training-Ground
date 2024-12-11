@@ -23,14 +23,23 @@ public class EndTimer : MonoBehaviour
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     /// </summary>
-    public void finished()
+    void FixedUpdate()
     {
-        // if(!trigger && demon.CompareTag("Dead"))
-        // {
+        if(!trigger && demon.CompareTag("Dead"))
+        {
             trigger = true;
             timer.StopTimer();
             score.CheckHighScore();
-            Debug.Log("dea");
-        // }
+        }
+    }
+
+    public void finished()
+    {
+        if(!trigger && demon.CompareTag("Dead"))
+        {
+            trigger = true;
+            timer.StopTimer();
+            score.CheckHighScore();
+        }
     }
 }

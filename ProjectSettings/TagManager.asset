@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Ground
   - Projectile
+  - Axe
+  - Bullet
+  - ActiveWall
+  - Dead
+  - Ouch
   layers:
   - Default
   - TransparentFX
@@ -13,10 +18,10 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
+  - Gun
+  - Player
+  - Target
+  - TriggerWalls
   - 
   - 
   - 

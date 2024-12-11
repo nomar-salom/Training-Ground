@@ -13,9 +13,9 @@ public class Rifle2 : MonoBehaviour
     [SerializeField] private float reloadTime = 2f;
     [SerializeField] private float fireRate = 0.5f;
 
-    [SerializeField] private AudioClip shootingSound; // Shooting sound
+    // [SerializeField] private AudioClip shootingSound; // Shooting sound
     [SerializeField] private AudioClip reloadingSound; // Reloading sound
-    private AudioSource audioSource;
+    // private AudioSource audioSource;
 
     private int bulletsLeft;
     public bool isReloading = false;
@@ -23,8 +23,7 @@ public class Rifle2 : MonoBehaviour
 
     private bool lastShootState = false;
 
-<<<<<<< Updated upstream
-=======
+
     public AudioClip shootingSound; // Shooting sound
     // [SerializeField] private AudioClip reloadingSound; // Reloading sound
     public AudioSource audioSource;
@@ -34,9 +33,6 @@ public class Rifle2 : MonoBehaviour
 
     float lastShotTime;
 
-
-
->>>>>>> Stashed changes
     void Start()
     {
         _input = transform.root.GetComponent<PlayerMovement>();
@@ -78,18 +74,17 @@ public class Rifle2 : MonoBehaviour
 
     void Shoot()
     {
-<<<<<<< Updated upstream
-        nextFireTime = Time.time + fireRate;
 
-        // Instantiate and fire the bullet
-=======
         // nextFireTime = Time.time + fireRate;
->>>>>>> Stashed changes
+
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
         bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
         Destroy(bullet, 1);
 
         bulletsLeft--;
+
+        ammoText.UseRifleAmmo();
+
 
         // Play the shooting sound
         if (audioSource != null && shootingSound != null)
@@ -105,8 +100,11 @@ public class Rifle2 : MonoBehaviour
         // Play the reloading sound
         if (audioSource != null && reloadingSound != null)
         {
+            ammoText.reloadRifleAmmoText();
             audioSource.PlayOneShot(reloadingSound);
         }
+
+        
 
         yield return new WaitForSeconds(reloadTime);
 
