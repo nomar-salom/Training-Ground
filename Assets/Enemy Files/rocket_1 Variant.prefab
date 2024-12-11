@@ -73,7 +73,14 @@ PrefabInstance:
       addedObject: {fileID: 6401208348285197904}
     - targetCorrespondingSourceObject: {fileID: 5809823269168808164, guid: 435db10d5bbe519418cea4ce4a81af3f, type: 3}
       insertIndex: -1
+<<<<<<< Updated upstream
       addedObject: {fileID: 1500777331735352623}
+=======
+      addedObject: {fileID: 7170007044587503667}
+    - targetCorrespondingSourceObject: {fileID: 5809823269168808164, guid: 435db10d5bbe519418cea4ce4a81af3f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4389272754498386753}
+>>>>>>> Stashed changes
   m_SourcePrefab: {fileID: 100100000, guid: 435db10d5bbe519418cea4ce4a81af3f, type: 3}
 --- !u!1 &7487461752213573419 stripped
 GameObject:
@@ -120,3 +127,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeTime: 5
+--- !u!64 &4389272754498386753
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7487461752213573419}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: c09899df9d3142f46a303cd551920f5b, type: 3}

@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 3778118762408743193, guid: b04d4f1ae94fd094694414c663b96a7c, type: 3}
   bulletPoint: {fileID: 8116184380897751199}
-  bulletSpeed: 600
+  bulletSpeed: 1800
   magazineSize: 30
   reloadTime: 2
   fireRate: 0.1

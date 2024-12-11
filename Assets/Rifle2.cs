@@ -18,11 +18,25 @@ public class Rifle2 : MonoBehaviour
     private AudioSource audioSource;
 
     private int bulletsLeft;
-    private bool isReloading = false;
-    private float nextFireTime = 0f;
+    public bool isReloading = false;
+    private float nextFireTime = 0.4f;
 
     private bool lastShootState = false;
 
+<<<<<<< Updated upstream
+=======
+    public AudioClip shootingSound; // Shooting sound
+    // [SerializeField] private AudioClip reloadingSound; // Reloading sound
+    public AudioSource audioSource;
+
+    public AmmoCounter ammoText;
+    public AudioSource reloadSound;
+
+    float lastShotTime;
+
+
+
+>>>>>>> Stashed changes
     void Start()
     {
         _input = transform.root.GetComponent<PlayerMovement>();
@@ -42,11 +56,14 @@ public class Rifle2 : MonoBehaviour
 
     void Update()
     {
+
+        if (!gameObject.activeSelf) return;
         if (isReloading) return;
 
         // Fire only when the input state changes (from not shooting to shooting)
-        if (_input.shoot && !lastShootState && bulletsLeft > 0 && Time.time >= nextFireTime)
+        if (_input.shoot && !lastShootState && bulletsLeft > 0 && Time.time - lastShotTime >= nextFireTime)
         {
+            lastShotTime = Time.time;
             Shoot();
         }
 
@@ -61,9 +78,13 @@ public class Rifle2 : MonoBehaviour
 
     void Shoot()
     {
+<<<<<<< Updated upstream
         nextFireTime = Time.time + fireRate;
 
         // Instantiate and fire the bullet
+=======
+        // nextFireTime = Time.time + fireRate;
+>>>>>>> Stashed changes
         GameObject bullet = Instantiate(bulletPrefab, bulletPoint.transform.position, transform.rotation);
         bullet.GetComponent<Rigidbody>().AddForce(transform.forward * bulletSpeed);
         Destroy(bullet, 1);
