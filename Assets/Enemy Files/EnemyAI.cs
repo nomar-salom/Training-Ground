@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
@@ -32,6 +33,12 @@ public class EnemyAI : MonoBehaviour
 
     public AudioSource boom;
 
+    public PlayerScore scoreText;
+
+    public TMP_Text victory;
+
+    public EndTimer theEndTimes;
+
     private void Awake()
     {
         animator = GetComponent<Animator>(); // Get the Animator component
@@ -48,6 +55,9 @@ public class EnemyAI : MonoBehaviour
         {
             StartCoroutine(MoveCycle());
         }
+
+        victory.fontSize = 0;
+
     }
 
     private void Update()
@@ -179,6 +189,12 @@ private bool IsPlayerInSight()
     {
         // Play death animation
         animator.SetBool("isDead", true);
+
+        if(!isDead)
+        {
+            scoreText.AddScore(30);
+            theEndTimes.finished();
+        }
         isDead = true; // Set the enemy as dead
 
 
@@ -188,6 +204,9 @@ private bool IsPlayerInSight()
         }
 
         Invoke(nameof(DestroyEnemy), 4f); // Delay to let animation play
+
+        // victory.IsActive(true);// = true;
+        victory.fontSize = 100;
 
 
         tag = "Dead";

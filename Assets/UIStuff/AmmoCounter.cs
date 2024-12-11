@@ -54,17 +54,17 @@ public class AmmoCounter : MonoBehaviour
     }
 
     //FIXME: When Gunswap is finished, check to make sure this works. It'll need a flag of some sort to recognize which gun is currently active
-    // public void UseSubMachinegunAmmo()
-    // {
-    //     if (currentAmmoSubMachinegun > 0)
-    //    {
-    //        currentAmmoSubMachinegun--;
-    //         UpdateAmmoUISubMachinegun();
-    //     }
-    //}
+    public void UseSubMachinegunAmmo()
+    {
+        if (currentAmmoSubMachinegun > 0)
+       {
+           currentAmmoSubMachinegun--;
+            UpdateAmmoUISubMachinegun();
+        }
+    }
 
-    //void UpdateAmmoUISubMachinegun()
-    //{
-    //    ammoText.text = $"Ammo: " + currentAmmoSubMachinegun + " / " + maxAmmoSubMachinegun;
-    //}
+    void UpdateAmmoUISubMachinegun()
+    {
+       ammoText.text = $"Ammo: " + currentAmmoSubMachinegun + " / " + maxAmmoSubMachinegun;
+    }
 }

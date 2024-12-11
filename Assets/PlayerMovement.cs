@@ -19,11 +19,24 @@ public class PlayerMovement : MonoBehaviour
     private float rotationX = 0f; 
     public bool shoot;
 
+    public PlayerHealth health;
+
+    public GameObject rifle;
+    public GameObject smg;
+    private bool isRifleActive = true;
+    public Rifle2 rifleScript;
+    public MachineGun smgScript;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        rifleScript = rifle.GetComponentInChildren<Rifle2>();
+        smgScript = smg.GetComponentInChildren<MachineGun>();
+        rifle.SetActive(true);
+        smg.SetActive(false);
     }
 
     void Update()
@@ -83,5 +96,70 @@ public class PlayerMovement : MonoBehaviour
                 transform.Rotate(Vector3.up * Input.GetAxis("Mouse X") * sensitivity);
             }
         }
+
+         if (Input.GetKeyDown(KeyCode.E))
+         {
+            SwitchWeapon();
+            
+         }
+         shoot = Input.GetMouseButton(0);    
+    
+    
     }
+
+    void SwitchWeapon()
+    {
+        /*if (rifleScript.isReloading || smgScript.isReloading)
+        {
+            Debug.Log("Cannot switch weapons while reloading.");
+            return;
+        }*/
+
+        Debug.Log("Switching weapon");
+        if (isRifleActive)
+        {
+            StartCoroutine(SwitchWeaponSmooth(rifle, smg));
+        }
+        else
+        {
+            StartCoroutine(SwitchWeaponSmooth(smg, rifle));
+        }
+        isRifleActive = !isRifleActive;
+    }
+
+
+    IEnumerator SwitchWeaponSmooth(GameObject oldWeapon, GameObject newWeapon)
+    {
+        float duration = 0.3f; // Duration of the animation
+        Vector3 initialOldPos = oldWeapon.transform.localPosition;
+        Vector3 targetOldPos = initialOldPos + new Vector3(0, -0.5f, -0.5f); // Move backwards
+        Vector3 initialNewPos = newWeapon.transform.localPosition;
+        Vector3 targetNewPos = initialNewPos + new Vector3(0, 0.5f, 0.5f); // Move forwards
+
+        // Deactivate shooting while switching weapons
+        shoot = false;
+
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            oldWeapon.transform.localPosition = Vector3.Lerp(initialOldPos, targetOldPos, t / duration);
+            newWeapon.transform.localPosition = Vector3.Lerp(initialNewPos, targetNewPos, t / duration);
+            yield return null;
+        }
+
+        // Activate/deactivate weapons
+        oldWeapon.SetActive(false);
+        newWeapon.SetActive(true);
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // Check if the collision object has a "Projectile" tag
+        if (collision.gameObject.CompareTag("Ouch"))
+        {
+            Debug.Log("ouch");
+            health.TakeDamage(1);
+        }
+    }
+
+    
 }

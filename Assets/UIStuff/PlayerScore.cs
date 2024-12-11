@@ -30,7 +30,7 @@ public class PlayerScore : MonoBehaviour
 
     public void UpdateHighScoreUI()
     {
-        highScoreText.text = "High Score: " + highScore;
+        // highScoreText.text = "High Score: " + highScore;
     }
 
     public void CheckHighScore()

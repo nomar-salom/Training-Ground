@@ -32,4 +32,14 @@ public class EndTimer : MonoBehaviour
             score.CheckHighScore();
         }
     }
+
+    public void finished()
+    {
+        if(!trigger && demon.CompareTag("Dead"))
+        {
+            trigger = true;
+            timer.StopTimer();
+            score.CheckHighScore();
+        }
+    }
 }
