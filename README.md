@@ -6,15 +6,15 @@ Training Ground
 
 ## Group Members:
 
-Nomar Salom - Gun Physics
+Nomar Salom - Rifle and Enemy Boss
 
-Shane Sirota - Level Design
+Shane Sirota - Level Design and Axes
 
-Joshua Espinosa - Movement
+Joshua Espinosa - Player Controller and Main Menus
 
-Clayton Cox - Targets
+Clayton Cox - Targets and Game UI
 
-Arturo Cardenal - Score and UI
+Arturo Cardenal - Weapon Swapping and Machine Gun
 
 ## Game Description
 Training Ground is a first person shooting game where you will go through a course as fast as you can while also shooting targets that will move and pop up. How well you do in the game is determined by the time in which you complete the course, but with how many targets missed affecting your score. Be careful of the enemy at the end of the course! 
