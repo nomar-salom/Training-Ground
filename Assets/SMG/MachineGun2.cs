@@ -109,7 +109,7 @@ public class MachineGun2 : MonoBehaviour
         }*/
 
         ammoText.HideReloading();
-        ammoText.reloadSMGAmmoText();
+        ammoText.reloadSubMachinegunAmmoText();
 
     }
 }
